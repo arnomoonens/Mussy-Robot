@@ -6,12 +6,12 @@ import sys
 from text_to_speech import speak
 
 # Adapted version from https://github.com/rob-mccann/Pi-Voice/blob/e67872c15cc5b1d00d835598246bb0b6b7aaabba/listen.py
-LM = "./pocketsphinx/9374.lm"
-DIC = "./pocketsphinx/9374.dic"
+LM = "./pocketsphinx/5715.lm"
+DIC = "./pocketsphinx/5715.dic"
 
 def hear_computer():
     """Start the subprocess to continuously listen for 'computer'"""
-    pocketsphinx_commands = ['pocketsphinx_continuous', '-inmic', 'yes']
+    pocketsphinx_commands = ['pocketsphinx_continuous', '-inmic', 'yes', '-lm', LM, '-dict', DIC]
     psphinx_process = subprocess.Popen(
         pocketsphinx_commands,
         stdout=subprocess.PIPE,
@@ -26,7 +26,7 @@ def hear_computer():
         if b'computer' in psphinx_output.lower():
             # kill continuous listening so it does not trigger during listen()
             psphinx_process.kill()
-            speak("Understood computer")
+            speak("Understood 'computer'. Stopping program.")
             sys.exit(0)
             # restart continuous listening
             psphinx_process = subprocess.Popen(
