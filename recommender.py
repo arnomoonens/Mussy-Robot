@@ -64,6 +64,9 @@ class MusicRecommender(object):
         df['AlbumName'] = df['AlbumName'].apply(clean_value)
         return df
 
+    def get_song_information(self, song_id):
+        return self.df.loc[song_id]
+
     def song_vector(self, song_id, flattened=False):
         song = self.df.loc[song_id]
         song_vector = [song_id]
@@ -120,4 +123,6 @@ if __name__ == '__main__':
     recommender.song_feedback(5)
     recommender.song_feedback(343)
     recommender.song_feedback(234)
-    print("Recommended:", recommender.recommend_song())
+    recommended = recommender.recommend_song()
+    song = recommender.get_song_information(recommended)
+    print("Recommended: '{}' by '{}'".format(song['Title'], song['ArtistName']))
