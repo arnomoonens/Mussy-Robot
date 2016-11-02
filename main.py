@@ -11,7 +11,8 @@ recommended = recommender.recommend_song()
 song = recommender.get_song_information(recommended)
 
 speak("Recommended song: '{}' by '{}'".format(song['Title'], song['ArtistName']))
-
-song_gplay = get_song(song['Title'], song['ArtistName'])
-
-play_song(song_gplay['nid'])
+try:
+    song_gplay = get_song(song['Title'], song['ArtistName'])
+    play_song(song_gplay['nid'])
+except:
+    speak("Sorry, I could not play the recommended song. Exiting.")

@@ -23,7 +23,7 @@ class MusicRecommender(object):
             self.df = pd.read_csv(self.songs_csv_path, index_col=0)
         else:
             self.df = self.preprocess(self.songs_csv_path)
-        self.liked_songs = []
+        self.rated_songs = []
 
         self.used_features = [
             {'name': 'ArtistName', 'type': 'categorical'},
@@ -42,6 +42,7 @@ class MusicRecommender(object):
         return
 
     def preprocess(self, songs_csv_path):
+        """Make a cleaned dataframe of the data in songs_csv_path."""
         df = pd.read_csv(songs_csv_path, index_col=0, na_values={'Year': [0], 'ArtistLocation': ["b''"]})
         regex1 = re.compile(r"b'(.*)'\"?")
         regex2 = re.compile(r"b(.*)\"\"")
@@ -65,11 +66,13 @@ class MusicRecommender(object):
         return df
 
     def get_song_information(self, song_id):
+        """Retrieve a song with id song_id from the dataframe."""
         return self.df.loc[song_id]
 
-    def song_vector(self, song_id, flattened=False):
+    def song_vector(self, song_id, extra_information=[], flattened=False):
+        """Puts the song_id, extra_information and the features used for recommendation in a (flattened) array."""
         song = self.df.loc[song_id]
-        song_vector = [song_id]
+        song_vector = [song_id] + extra_information
         for feature in self.used_features:
             name = feature['name']
             if feature['type'] == 'categorical':
@@ -82,23 +85,27 @@ class MusicRecommender(object):
             return np.array(song_vector, dtype=np.object)
 # song_vector = np.vectorize(song_vector, otypes=np.object)
 
-    def recommend_song(self, sample_size=50):
+    def recommend_song(self, sample_size=50, include_heard_songs=False):
         """Recommend a song (by giving it's id) based on the user's preferences"""
         # Compute for each song the similarity
         # Return the most similar song
-        liked_songs_arr = np.array(self.liked_songs, dtype=np.object)
-        liked_songs_ids = liked_songs_arr[:, 0]
-        liked_songs_features = liked_songs_arr[:, 1:]
+        songs_arr = np.array(self.rated_songs, dtype=np.object)
+        songs_ids = songs_arr[:, 0]
+        # songs_scores = songs_arr[:, 1]  # How much the user liked it
+        songs_features = songs_arr[:, 2:]
         # print("Making profile")
         profile = []
         for i, feature in enumerate(self.used_features):
             if feature['type'] == 'categorical':
-                profile.extend(np.sum(liked_songs_features[:, i]))
+                profile.extend(np.sum(songs_features[:, i]))
             else:
-                profile.append(np.mean(liked_songs_features[:, i]))
+                profile.append(np.mean(songs_features[:, i]))
         profile = np.array(profile)
         # print("Making song vectors")
-        songs_subset = np.random.choice(self.df.index, min(sample_size, len(self.df) - len(liked_songs_ids)), replace=False)
+        if include_heard_songs:
+            songs_subset = self.df.index
+        else:
+            songs_subset = np.random.choice(np.setdiff1d(self.df.index, songs_ids), min(sample_size, len(self.df) - len(songs_ids)), replace=False)
         song_vectors = np.array([self.song_vector(i, flattened=True) for i in songs_subset])
 
         def similarity(x):
@@ -110,9 +117,9 @@ class MusicRecommender(object):
         similarities = [similarity(x) for x in song_vectors[:, 1:]]
         return songs_subset[np.argmin(similarities)]
 
-    def song_feedback(self, song_id, positive=True):
-        """Change the preferences of the user based on the feedback given for the song"""
-        self.liked_songs.append(self.song_vector(song_id))
+    def song_feedback(self, song_id, score=1):
+        """Rate the song with id song_id. By default gives a score of 1."""
+        self.rated_songs.append(self.song_vector(song_id, extra_information=[score]))
         return
 
 if __name__ == '__main__':
@@ -125,4 +132,4 @@ if __name__ == '__main__':
     recommender.song_feedback(234)
     recommended = recommender.recommend_song()
     song = recommender.get_song_information(recommended)
-    print("Recommended: '{}' by '{}'".format(song['Title'], song['ArtistName']))
+    print("Recommended: '{}' by '{}' (id {})".format(song['Title'], song['ArtistName'], recommended))
