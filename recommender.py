@@ -87,23 +87,21 @@ class MusicRecommender(object):
 
     def recommend_song(self, sample_size=50, include_heard_songs=False):
         """Recommend a song (by giving it's id) based on the user's preferences"""
-        # Compute for each song the similarity
-        # Return the most similar song
         songs_arr = np.array(self.rated_songs, dtype=np.object)
         songs_ids = songs_arr[:, 0]
-        # songs_scores = songs_arr[:, 1]  # How much the user liked it
+        songs_scores = songs_arr[:, 1]  # How much the user liked it
         songs_features = songs_arr[:, 2:]
         # print("Making profile")
         profile = []
         for i, feature in enumerate(self.used_features):
             if feature['type'] == 'categorical':
-                profile.extend(np.sum(songs_features[:, i]))
+                profile.extend(np.sum(songs_features[:, i] * songs_scores))
             else:
-                profile.append(np.mean(songs_features[:, i]))
+                profile.append(np.mean(songs_features[:, i] * songs_scores))
         profile = np.array(profile)
         # print("Making song vectors")
         if include_heard_songs:
-            songs_subset = self.df.index
+            songs_subset = np.random.choice(self.df.index, min(sample_size, len(self.df)))
         else:
             songs_subset = np.random.choice(np.setdiff1d(self.df.index, songs_ids), min(sample_size, len(self.df) - len(songs_ids)), replace=False)
         song_vectors = np.array([self.song_vector(i, flattened=True) for i in songs_subset])
