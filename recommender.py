@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 # from sklearn.metrics.pairwise import paired_distances
 import re
+import csv
 from collections import Counter
 from sklearn.feature_extraction import DictVectorizer
 from scipy.spatial.distance import euclidean
@@ -16,9 +17,10 @@ from scipy.spatial.distance import euclidean
 
 class MusicRecommender(object):
     """Item-based recommender for songs."""
-    def __init__(self, songs_csv_path, preprocessed=True):
+    def __init__(self, songs_csv_path, feedback_file=None, preprocessed=True):
         super(MusicRecommender, self).__init__()
         self.songs_csv_path = songs_csv_path
+        self.feedback_file = feedback_file
         if preprocessed:
             self.df = pd.read_csv(self.songs_csv_path, index_col=0)
         else:
@@ -118,6 +120,32 @@ class MusicRecommender(object):
     def song_feedback(self, song_id, score=1):
         """Rate the song with id song_id. By default gives a score of 1."""
         self.rated_songs.append(self.song_vector(song_id, extra_information=[score]))
+        return
+
+    def read_feedback(self):
+        """Add the feedback of multiple songs from a file."""
+        if not(self.feedback_file):
+            print("Please give a value for feedback_file first.")
+            return
+        f = open(self.feedback_file)
+        reader = csv.reader(f)
+        next(reader)  # Skip the header
+        for song_id, score in reader:
+            self.song_feedback(int(song_id), score=int(score))
+        f.close()
+        return
+
+    def save_feedback(self):
+        """Save the feedback of songs to a file"""
+        if not(self.feedback_file):
+            print("Please give a value for feedback_file first.")
+            return
+        f = open(self.feedback_file, 'w')
+        writer = csv.writer(f)
+        writer.writerow(['id', 'score'])
+        for song in self.rated_songs:
+            writer.writerow(song[:2])
+        f.close()
         return
 
 if __name__ == '__main__':
