@@ -43,6 +43,9 @@ class MusicRecommender(object):
             self.vectors[column_name] = vector
         return
 
+    def available_songs(self):
+        return len(self.df)
+
     def preprocess(self, songs_csv_path):
         """Make a cleaned dataframe of the data in songs_csv_path."""
         df = pd.read_csv(songs_csv_path, index_col=0, na_values={'Year': [0], 'ArtistLocation': ["b''"]})
