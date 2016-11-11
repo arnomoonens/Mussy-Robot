@@ -25,7 +25,7 @@ class MusicRecommender(object):
             self.df = pd.read_csv(self.songs_csv_path, index_col=0)
         else:
             self.df = self.preprocess(self.songs_csv_path)
-        self.rated_songs = []
+        self.rated_songs = {}
 
         self.used_features = [
             {'name': 'ArtistName', 'type': 'categorical'},
@@ -77,7 +77,7 @@ class MusicRecommender(object):
     def song_vector(self, song_id, extra_information=[], flattened=False):
         """Puts the song_id, extra_information and the features used for recommendation in a (flattened) array."""
         song = self.df.loc[song_id]
-        song_vector = [song_id] + extra_information
+        song_vector = [] + extra_information
         for feature in self.used_features:
             name = feature['name']
             if feature['type'] == 'categorical':
@@ -92,10 +92,10 @@ class MusicRecommender(object):
 
     def recommend_song(self, sample_size=50, include_heard_songs=False):
         """Recommend a song (by giving it's id) based on the user's preferences"""
-        songs_arr = np.array(self.rated_songs, dtype=np.object)
-        songs_ids = songs_arr[:, 0]
-        songs_scores = songs_arr[:, 1]  # How much the user liked it
-        songs_features = songs_arr[:, 2:]
+        songs_arr = np.array(list(self.rated_songs.values()), dtype=np.object)
+        songs_ids = list(self.rated_songs.keys())
+        songs_scores = songs_arr[:, 0]  # How much the user liked it
+        songs_features = songs_arr[:, 1:]
         # print("Making profile")
         profile = []
         for i, feature in enumerate(self.used_features):
@@ -117,12 +117,12 @@ class MusicRecommender(object):
         # similarity = np.vectorize(similarity)
         # print("Computing similarities")
         # similarities = similarity(song_vectors)
-        similarities = [similarity(x) for x in song_vectors[:, 1:]]
+        similarities = [similarity(x) for x in song_vectors]
         return songs_subset[np.argmin(similarities)]
 
     def song_feedback(self, song_id, score=1):
         """Rate the song with id song_id. By default gives a score of 1."""
-        self.rated_songs.append(self.song_vector(song_id, extra_information=[score]))
+        self.rated_songs[song_id] = self.song_vector(song_id, extra_information=[score])
         return
 
     def read_feedback(self):
