@@ -53,9 +53,7 @@ def find_face(im):
 
 def find_mouth(im,scale,n_nei,preprocess):
     mouthCascade = cv2.CascadeClassifier('haarcascade_mcs_mouth.xml')
-
     #running classifier
-
     max_face=find_face(im)
 
 
