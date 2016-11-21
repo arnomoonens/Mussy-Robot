@@ -44,9 +44,9 @@ def web_cam():
             print 'capturing!'
             s, img = video_capture.read()
             if s:
-                #cv2.imwrite("test.png",img)
-                return img
+                cv2.imwrite("test.png",img)
             # When everything is done, release the capture
+            break
         video_capture.release()
             
 

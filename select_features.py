@@ -7,7 +7,7 @@ Created on Sun Nov 20 18:30:57 2016
 import mouth_recognition
 from PIL import Image
 import numpy
-
+import training
 #values for mouthCascade.detectMultiScale for find mouths
 scale=1.1
 neighbors=25
@@ -47,7 +47,7 @@ for im in im_normal:
 size=[40,80]
     
 data=(numpy.concatenate((mouth_sad,mouth_happy,mouth_normal),axis=0)).reshape(45, size[0] * size[1])
-
+training.training(data)
 
 
 

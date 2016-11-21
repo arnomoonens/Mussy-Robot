@@ -18,4 +18,6 @@ def prediction(im,pre_model):
         
     detected_mouth=mouth_recognition.find_mouth(im,scale,neighbors,1)
     size=[40,80]
-    return pre_model.predict(detected_mouth.reshape(1, size[0] * size[1]))
+    value_predict=pre_model.predict(detected_mouth.reshape(1, size[0] * size[1]))
+    print(value_predict)
+    return value_predict
