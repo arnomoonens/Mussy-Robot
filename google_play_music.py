@@ -1,5 +1,5 @@
 import sys
-from subprocess import call
+from subprocess import Popen
 from gmusicapi import Mobileclient
 from config import google_play_music_email, google_play_music_password
 from text_to_speech import speak
@@ -19,7 +19,7 @@ def play_song(song_id):
     """Play a song on Google Play Music using mpg123 given its song_id"""
     https_url = api.get_stream_url(song_id)
     url = 'http' + https_url[5:]
-    call(["mpg123", "-q", url])
+    return Popen(["mpg123", "-q", url])
 
 if __name__ == '__main__':
     song = get_song("Panda", "Designer")

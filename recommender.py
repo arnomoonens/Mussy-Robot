@@ -11,6 +11,8 @@ from collections import Counter
 from sklearn.feature_extraction import DictVectorizer
 from scipy.spatial.distance import euclidean
 
+
+
 # Idea: Have a database with for each feature how important it is for the user
 # Feature is for example a specific artist
 # To suggest a new song, find one with similar features
