@@ -6,7 +6,7 @@
 from subprocess import call
 import sys
 import re
-from urllib.parse import urlencode
+from urllib import urlencode
 
 MAX_LEN = 100  # Maximum length of a segment to send to Google for TTS
 LANGUAGE = "en"  # Language to use with TTS - this won't do any translation, just the voice it's spoken with
