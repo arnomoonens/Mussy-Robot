@@ -26,12 +26,12 @@ def training(data):
     svc_1 = SVC(kernel='linear')
     
     
-    #we create the target vector of 0 for sad images, 1 for happy, 
-    #and 2 for normal images
+    #we create the target vector of -1 for sad images, 0 for normal, 
+    #and 1 for happy images  the data  is composed by 15 sad image after 15 happy image and after 15 normal image
     zero=[int(i) for i in numpy.zeros(15)]
     one=[int(i) for i in numpy.ones(15)]
-    two=[int(i) for i in numpy.repeat(2,15)]
-    target=numpy.concatenate((zero,one,two),axis=0)
+    minus1=[int(i) for i in numpy.repeat(-1,15)]
+    target=numpy.concatenate((minus1,one,zero,),axis=0)
     
     #we test if the classifier work correctly with CROSS-VALIDATION
     #5 fold cross validation
