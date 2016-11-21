@@ -33,29 +33,33 @@ recommender = MusicRecommender('songs.csv')
 recommender.song_feedback(343)
 recommender.song_feedback(234)
 
-while True:  # Keep playing songs
-    found_song = False
-    while not(found_song):
-        recommend_song = recommender.recommend_song()
-        song = recommender.get_song_information(recommend_song)
-        speak("Now playing: " + song['Title'] + " by " + song['ArtistName'])
-        try:
-            song_gplay = get_song(song['Title'], song['ArtistName'])
-            found_song = True
-        except KeyboardInterrupt:
-            sys.exit()
-        except:
-            continue
-    play_process = play_song(song_gplay['nid'])
-    time.sleep(5)
-    img = cv2.imread("webcam_sad.jpg")
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    score = emotion_recognition(gray)
-    print("Feedback for song " + str(recommend_song) + ": " + str(score))
-    recommender.song_feedback(recommend_song, score=score)
-    key = None
-    while(key != '\x1b'):
-        key = getch()
-        if key == 'q':
-            sys.exit()
-    play_process.terminate()
+def play(proc,imageQ):
+ while not proc.empty():  # Keep playing songs
+     found_song = False
+     while not(found_song):
+         recommend_song = recommender.recommend_song()
+         song = recommender.get_song_information(recommend_song)
+         speak("Now playing: " + song['Title'] + " by " + song['ArtistName'])
+         try:
+             song_gplay = get_song(song['Title'], song['ArtistName'])
+             found_song = True
+         except KeyboardInterrupt:
+             sys.exit()
+         except:
+             continue
+     play_process = play_song(song_gplay['nid'])
+     time.sleep(5)
+     if not imageQ.empty():
+         gray = imageQ.get()
+         print 'presa'
+         while not imageQ.empty():
+             trash=imageQ.get()
+         score = emotion_recognition(gray)
+         print("Feedback for song " + str(recommend_song) + ": " + str(score))
+         recommender.song_feedback(recommend_song, score=score)
+         key = None
+     while(key != '\x1b'):
+         key = getch()
+         if key == 'q':
+             sys.exit()
+     play_process.terminate()

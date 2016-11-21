@@ -3,9 +3,12 @@ import cv2
 from multiprocessing import Process, Queue
 import time
 import myservo as servo
+import mysound as sound
 
 aliveP=Queue()
 aliveP.put(1)
+
+imageQ = Queue()
 
 #------- close everything --------
 def exit_all():
@@ -14,6 +17,7 @@ def exit_all():
     cv2.destroyAllWindows()
     proc.terminate()
     proc_2.terminate()
+    proc_sound.terminate()
     print 'Every thing is closed.'
 
 #------- function to detect the face ----- 
@@ -31,8 +35,11 @@ def draw_rects(img, rects, color):
 #---- initialization----- 
 proc = Process(target=servo.P0, args=(aliveP,))
 proc_2 = Process(target=servo.P1, args=(aliveP,))
+proc_sound = Process(target=sound.play, args=(aliveP,imageQ,))
+                     
 proc.start()
 proc_2.start()
+proc_sound.start()
 time.sleep(.1)
 
 #------ main program start ------
@@ -71,6 +78,8 @@ if __name__ == '__main__':
                 rects = detect(gray, upperbody)
                 if rects!=[]:
                         found=True
+        if found:
+                imageQ.put(img)
         
 	#we are given an x,y corner point and a width and height, we need the center
 	for f in rects:

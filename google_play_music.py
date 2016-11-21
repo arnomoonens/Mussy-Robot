@@ -25,3 +25,4 @@ if __name__ == '__main__':
     song = get_song("Panda", "Designer")
     speak("Now playing '{}' by '{}'".format(song['title'], song['artist']))
     play_song(song['nid'])
+    
