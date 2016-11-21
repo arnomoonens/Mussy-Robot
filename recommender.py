@@ -113,7 +113,7 @@ class MusicRecommender(object):
 
         def similarity(x):
             """Calculate the euclidean distance between the profile and the features of a song vector"""
-            return euclidean(profile, x)
+            return np.linalg.norm(profile - x)
         # similarity = np.vectorize(similarity)
         # print("Computing similarities")
         # similarities = similarity(song_vectors)
