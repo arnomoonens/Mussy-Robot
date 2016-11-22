@@ -2,6 +2,7 @@ import numpy as np
 import cv2
 from multiprocessing import Process, Queue
 import time
+import sys
 import myservo as servo
 import mysound as sound
 
@@ -12,8 +13,8 @@ imageQ = Queue()
 
 #------- close everything --------
 def exit_all():
-    while not imageQ.empty():
-        trash=imageQ.get()
+    while not imageQ.empty(): 
+	trash=imageQ.get()
     trash=aliveP.get() #close all process alive
     cam.release()
     cv2.destroyAllWindows()
@@ -67,11 +68,13 @@ if __name__ == '__main__':
         gray = cv2.equalizeHist(gray)
 	
 	found = False
+	frontal_found=False
 	#detect the face in 3 ways 
 	if not found:     	
 		rects = detect(gray, frontface)
 		if rects!=[]:
 			found=True
+			frontal_found=True
 	if not found:     	
 		rects = detect(gray, profileface)
 		if rects!=[]:
@@ -80,14 +83,17 @@ if __name__ == '__main__':
                 rects = detect(gray, upperbody)
                 if rects!=[]:
                         found=True
-        if found:
-                imageQ.put(img)
+
         
 	#we are given an x,y corner point and a width and height, we need the center
 	for f in rects:
 		face=f
 	x,y,w,z = face
-	Cface = [(w/2+x),(z/2+y)]
+	Cface = [(w+x)/2,(z+y)/2]
+	
+	#add the image face on the queue for the emotion recognition
+        if frontal_found:
+                imageQ.put(img[x:w,y:z])
 
         #if face is found the camera follow it 
 	if Cface[0] != 0:

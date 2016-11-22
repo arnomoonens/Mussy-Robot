@@ -2,6 +2,7 @@ import numpy as np
 import cv2
 from multiprocessing import Process, Queue
 import time
+import sys
 #import myservo as servo
 import mysound as sound
 
@@ -12,14 +13,14 @@ imageQ = Queue()
 
 #------- close everything --------
 def exit_all():
-    while not imageQ.empty():
-        trash=imageQ.get()
+    while not imageQ.empty(): 
+	trash=imageQ.get()
     trash=aliveP.get() #close all process alive
     cam.release()
     cv2.destroyAllWindows()
 #    proc.terminate()
 #    proc_2.terminate()
-    proc_sound.terminate()
+#    proc_sound.terminate()
     print 'Every thing is closed.'
 
 #------- function to detect the face ----- 
@@ -47,31 +48,34 @@ time.sleep(.1)
 #------ main program start ------
 if __name__ == '__main__':
     
- frontface_path = "../opencv-3.0.0/data/haarcascades/haarcascade_frontalface_alt2.xml"
- profileface_path = "../opencv-3.0.0/data/haarcascades/haarcascade_profileface.xml"
- upperbody_path = "../opencv-3.0.0/data/haarcascades/haarcascade_upperbody.xml"
+ frontface_path = "../opencv/data/haarcascades/haarcascade_frontalface_alt2.xml"
+ profileface_path = "../opencv/data/haarcascades/haarcascade_profileface.xml"
+ upperbody_path = "../opencv/data/haarcascades/haarcascade_upperbody.xml"
  
  frontface = cv2.CascadeClassifier(frontface_path)
  profileface = cv2.CascadeClassifier(profileface_path)
  upperbody = cv2.CascadeClassifier(upperbody_path)
  
+ 
  cam = cv2.VideoCapture(0)
- cam.set(cv2.CAP_PROP_FRAME_WIDTH, 320)
- cam.set(cv2.CAP_PROP_FRAME_HEIGHT, 240)
+ cam.set(cv2.CAP_PROP_FRAME_WIDTH, 320*2)
+ cam.set(cv2.CAP_PROP_FRAME_HEIGHT, 240*2)
 
  try: 
     while True:
 	face = [0,0,0,0]
         ret, img = cam.read()
-        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
         gray = cv2.equalizeHist(gray)
 	
 	found = False
+	frontal_found=False
 	#detect the face in 3 ways 
 	if not found:     	
 		rects = detect(gray, frontface)
 		if rects!=[]:
 			found=True
+			frontal_found=True
 	if not found:     	
 		rects = detect(gray, profileface)
 		if rects!=[]:
@@ -80,14 +84,17 @@ if __name__ == '__main__':
                 rects = detect(gray, upperbody)
                 if rects!=[]:
                         found=True
-        if found:
-                imageQ.put(img)
+                
         
 	#we are given an x,y corner point and a width and height, we need the center
 	for f in rects:
 		face=f
 	x,y,w,z = face
-	Cface = [(w/2+x),(z/2+y)]
+	Cface = [(w+x)/2,(z+y)/2]
+
+	#add the image face on the queue for the emotion recognition
+        if frontal_found:
+                imageQ.put(img[x:w,y:z])
 
         #if face is found the camera follow it 
 #	if Cface[0] != 0:
@@ -100,13 +107,14 @@ if __name__ == '__main__':
 #			servo.turnUp(1)
 #		elif Cface[1] < 100:	
 #			servo.turnDw(1)
-#			
+			
 	#Show the result on the screen 
         vis = img.copy()
         draw_rects(vis, rects, (0, 255, 0))
         cv2.imshow('facedetect', vis)
         if 0xFF & cv2.waitKey(5) == 27:
             exit_all()
+	    print 'exit'
             break
 
 
@@ -119,6 +127,6 @@ if __name__ == '__main__':
     exit_all()
     print 'Done.'
  except:
-    exit_all()
-    print "Unexpected error:", sys.exc_info()[0]
-    raise 
+    print 'Unexpected error: ', sys.exc_info()[0]
+    raise
+

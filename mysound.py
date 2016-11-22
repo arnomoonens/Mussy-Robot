@@ -6,6 +6,7 @@ from text_to_speech import speak
 # from speech_to_text import get_voice_feedback
 from google_play_music import get_song, play_song
 from emotion_recognition import emotion_recognition
+from multiprocessing import Queue
 import time
 import sys
 from getch import getch
@@ -32,7 +33,7 @@ def play(proc, imageQ):
         time.sleep(5)
         if not imageQ.empty():  # If there are images to be used for emotion recognition
             gray = imageQ.get()
-            print('presa')
+            print 'I get it' 
             while not imageQ.empty():  # Remove all images from the queue
                 imageQ.get()
             score = emotion_recognition(gray)
@@ -47,3 +48,4 @@ def play(proc, imageQ):
                 sys.exit()
         print("Song is over or user wants the next song.")
         play_process.terminate()
+
