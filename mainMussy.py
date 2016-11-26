@@ -1,6 +1,6 @@
 import numpy as np
 import cv2
-from multiprocessing import Process, Queue
+from multiprocessing import Process, Queue, Lock
 import time
 import sys
 import myservo as servo
