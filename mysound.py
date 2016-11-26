@@ -9,7 +9,6 @@ from emotion_recognition import emotion_recognition
 from multiprocessing import Queue
 import time
 import sys
-from getch import getch
 
 recommender = MusicRecommender('songs.csv')
 
@@ -31,21 +30,17 @@ def play(proc, imageQ):
                 continue
         play_process = play_song(song_gplay['nid'])
         time.sleep(5)
-        if not imageQ.empty():  # If there are images to be used for emotion recognition
-            gray = imageQ.get()
-            print 'I get it' 
-            while not imageQ.empty():  # Remove all images from the queue
-                imageQ.get()
-            score = emotion_recognition(gray)
-            print("Feedback for song " + str(recommend_song) + ": " + str(score))
-            recommender.song_feedback(recommend_song, score=score)
-        key = None
-        while(key != '\x1b' and play_process.poll() != 0):  # While the song isn't done playing yet or no 'next' key is pressed
-            key = getch()
-            if key == 'q':
-                print("Quitting...")
-                play_process.terminate()
-                sys.exit()
+        score = 0
+        while(score >= 0 and not(proc.empty()) and play_process.poll() != 0):  # While the song isn't done playing yet or no 'next' key is pressed
+    		if not imageQ.empty():  # If there are images to be used for emotion recognition
+            		gray = imageQ.get()
+            		print 'I get it' 
+            		while not imageQ.empty():  # Remove all images from the queue
+                		imageQ.get()
+           		score = emotion_recognition(gray)
+            		print("Feedback for song " + str(recommend_song) + ": " + str(score))
+          		recommender.song_feedback(recommend_song, score=score)
         print("Song is over or user wants the next song.")
         play_process.terminate()
+    play_process.terminate()
 

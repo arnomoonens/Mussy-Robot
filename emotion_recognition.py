@@ -25,11 +25,16 @@ def prediction(im):
         #ax.add_artist(Rectangle((x, y), w, h, fill=False, lw=5, color='blue'))
 
     detected_mouth=mouth_recognition.find_mouth(im,scale,neighbors,1)
-    print 'size: ',detected_mouth.size
     size=[40,80]
-    value_predict=model.predict(detected_mouth.reshape(1, size[0] * size[1]))
-    # print(value_predict)
-    return value_predict[0]
+    if detected_mouth!=[]:
+	print 'size: ',detected_mouth.shape
+	cv2.imwrite('a1.jpg',detected_mouth)
+	value_predict=model.predict(detected_mouth.reshape(1, size[0] * size[1]))
+    	# print(value_predict)
+    	return value_predict[0]
+    else:
+	return 0
+	print 'Mouth dont found'
 
 #----------------- EMOTION RECOGNITION ---------------------------
 def emotion_recognition(image):
