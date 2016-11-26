@@ -6,7 +6,7 @@ from text_to_speech import speak
 # from speech_to_text import get_voice_feedback
 from google_play_music import get_song, play_song
 from emotion_recognition import emotion_recognition
-from multiprocessing import Queue
+from multiprocessing import Queue, Lock
 import time
 import sys
 
@@ -16,7 +16,7 @@ recommender = MusicRecommender('songs.csv')
 recommender.song_feedback(343)
 recommender.song_feedback(234)
 
-def play(proc, imageQ):
+def play(proc, imageQ,mylock):
     while not proc.empty():  # Keep playing songs
         found_song = False
         while not(found_song):
@@ -30,13 +30,18 @@ def play(proc, imageQ):
                 continue
         play_process = play_song(song_gplay['nid'])
         time.sleep(5)
-        score = 0
-        while(score >= 0 and not(proc.empty()) and play_process.poll() != 0):  # While the song isn't done playing yet or no 'next' key is pressed
+	score = 0
+        while(score >= 0 and not(proc.empty()) and play_process.poll() != 0):  # While the song isn't done playing yet or no 'next' key is pressed	
+		
     		if not imageQ.empty():  # If there are images to be used for emotion recognition
+			mylock.acquire()
             		gray = imageQ.get()
             		print 'I get it' 
             		while not imageQ.empty():  # Remove all images from the queue
-                		imageQ.get()
+                		trash=imageQ.get()
+				print 'empy'
+			mylock.release()
+			print 'empty?', imageQ.empty()
            		score = emotion_recognition(gray)
             		print("Feedback for song " + str(recommend_song) + ": " + str(score))
           		recommender.song_feedback(recommend_song, score=score)

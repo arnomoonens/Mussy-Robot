@@ -1,6 +1,6 @@
 import numpy as np
 import cv2
-from multiprocessing import Process, Queue
+from multiprocessing import Process, Queue, Lock
 import time
 import sys
 #import myservo as servo
@@ -8,6 +8,8 @@ import mysound as sound
 
 aliveP=Queue()
 aliveP.put(1)
+
+mylock = Lock()
 
 imageQ = Queue()
 
@@ -38,7 +40,7 @@ def draw_rects(img, rects, color):
 #---- initialization----- 
 #proc = Process(target=servo.P0, args=(aliveP,))
 #proc_2 = Process(target=servo.P1, args=(aliveP,))
-proc_sound = Process(target=sound.play, args=(aliveP,imageQ,))
+proc_sound = Process(target=sound.play, args=(aliveP,imageQ,mylock))
                      
 #proc.start()
 #proc_2.start()
@@ -94,8 +96,11 @@ if __name__ == '__main__':
 
 	#add the image face on the queue for the emotion recognition
         if frontal_found:
-                imageQ.put(gray[y:z,x:w])
-
+		if imageQ.empty():
+			mylock.acquire()
+			print 'put'
+                	imageQ.put(gray[y:z,x:w])
+			mylock.release()
         #if face is found the camera follow it 
 #	if Cface[0] != 0:
 #		if Cface[0] > 240:	
