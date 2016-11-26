@@ -27,8 +27,6 @@ def prediction(im):
     detected_mouth=mouth_recognition.find_mouth(im,scale,neighbors,1)
     size=[40,80]
     if detected_mouth!=[]:
-	print 'size: ',detected_mouth.shape
-	cv2.imwrite('a1.jpg',detected_mouth)
 	value_predict=model.predict(detected_mouth.reshape(1, size[0] * size[1]))
     	# print(value_predict)
     	return value_predict[0]

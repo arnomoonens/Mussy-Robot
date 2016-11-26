@@ -72,7 +72,6 @@ def find_mouth(im,scale,n_nei,preprocess):
     	#draw_rectangle(mouths[0],faceLower)
     	#print(mouths)
     	if(preprocess==1):
-	    print mouths
     	    mouth_im=crop_pre(mouths[0],faceLower)
     	else:
       	    mouth_im=crop(mouths[0],faceLower)
