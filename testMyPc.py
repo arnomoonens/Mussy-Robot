@@ -93,8 +93,8 @@ if __name__ == '__main__':
 	Cface = [(w+x)/2,(z+y)/2]
 
 	#add the image face on the queue for the emotion recognition
-        if frontal_found:	
-                imageQ.put(gray[x:w,y:z])
+        if frontal_found:
+                imageQ.put(gray[y:z,x:w])
 
         #if face is found the camera follow it 
 #	if Cface[0] != 0:
