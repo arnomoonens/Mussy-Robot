@@ -6,35 +6,36 @@ Created on Tue Nov 08 21:21:55 2016
 """
 import cv2
 import mouth_recognition
-#import prepare_dataset
+# import prepare_dataset
 from sklearn.externals import joblib
 
-#load the model
-model=joblib.load('svc_1.pkl')
+# load the model
+model = joblib.load('svc_1.pkl')
 
 
-#----------------------- PREDICTION ----------------------
+# ----------------------- PREDICTION ----------------------
 def prediction(im):
-    scale=1.1
-    neighbors=25
-    #from matplotlib.patches import Rectangle
-    #ax = gca()
-    #ax.imshow(im, cmap='gray')
-    #detected_faces=mouth_recognition.find_face(im)
-    #for (x, y, w, h) in detected_faces:
-        #ax.add_artist(Rectangle((x, y), w, h, fill=False, lw=5, color='blue'))
+    scale = 1.1
+    neighbors = 25
+    # from matplotlib.patches import Rectangle
+    # ax = gca()
+    # ax.imshow(im, cmap='gray')
+    # detected_faces=mouth_recognition.find_face(im)
+    # for (x, y, w, h) in detected_faces:
+        # ax.add_artist(Rectangle((x, y), w, h, fill=False, lw=5, color='blue'))
 
-    detected_mouth=mouth_recognition.find_mouth(im,scale,neighbors,1)
-    size=[40,80]
-    if detected_mouth!=[]:
-	value_predict=model.predict(detected_mouth.reshape(1, size[0] * size[1]))
-    	# print(value_predict)
-    	return value_predict[0]
+    detected_mouth = mouth_recognition.find_mouth(im, scale, neighbors, 1)
+    size = [40, 80]
+    if detected_mouth != []:
+        value_predict = model.predict(detected_mouth.reshape(1, size[0] * size[1]))
+        # print(value_predict)
+        return value_predict[0]
     else:
-	return 0
-	print 'Mouth dont found'
+        print('Mouth not found')
+        return 0
 
-#----------------- EMOTION RECOGNITION ---------------------------
+
+# ----------------- EMOTION RECOGNITION ---------------------------
 def emotion_recognition(image):
     return prediction(image)
 
