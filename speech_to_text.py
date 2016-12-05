@@ -7,8 +7,8 @@ from text_to_speech import speak
 import time
 
 # Adapted version from https://github.com/rob-mccann/Pi-Voice/blob/e67872c15cc5b1d00d835598246bb0b6b7aaabba/listen.py
-LM = "./pocketsphinx/5715.lm"
-DIC = "./pocketsphinx/5715.dic"
+LM = "./pocketsphinx/0495.lm"
+DIC = "./pocketsphinx/0495.dic"
 pocketsphinx_commands = [
     'pocketsphinx_continuous',
     '-hmm', '/usr/local/share/pocketsphinx/model/en-us/en-us',
@@ -26,7 +26,6 @@ def hear_computer():
 
     speak("Listener started. Say 'computer' to activate.")
     time.sleep(0.3)
-    counter = 0
     while 1:
         # read each line of output, strip the newline and index numbers
         psphinx_output = psphinx_process.stdout.readline().rstrip(b'\n').decode()
@@ -62,6 +61,7 @@ def get_voice_feedback(words, timeout=float("inf")):
         elif counter > 0:
             counter -= 1
             continue
+        print(psphinx_output)
         for word in words:
             if word in psphinx_output:
                 psphinx_process.kill()
@@ -72,6 +72,7 @@ def get_voice_feedback(words, timeout=float("inf")):
 
 if __name__ == '__main__':
     try:
-        get_voice_feedback(["yes", "no"], timeout=5)
+        get_voice_feedback(["start robot"], timeout=20)
+        print("It worked")
     except KeyboardInterrupt:
         pass

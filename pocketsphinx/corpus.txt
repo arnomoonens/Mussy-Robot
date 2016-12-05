@@ -1,6 +1,9 @@
+start mussy
+start robot
 computer
 good
 bad
 yes
 no
 exit
+stop
