@@ -3,12 +3,13 @@ import cv2
 from multiprocessing import Process, Queue, Lock
 import time
 import sys
+from speech_to_text import get_voice_feedback
 # import myservo as servo
 import mysound as sound
 
 aliveP = Queue()
 aliveP.put(1)
-
+	
 mylock = Lock()
 
 imageQ = Queue()
@@ -37,10 +38,16 @@ def draw_rects(img, rects, color):
     for x1, y1, x2, y2 in rects:
         cv2.rectangle(img, (x1, y1), (x2, y2), color, 2)
 
+
+get_voice_feedback(["start robot"],timeout=20) #timout seconds
+print('hi, i am here.')
+
+
 # ---- initialization-----
 # proc = Process(target=servo.P0, args=(aliveP,))
 # proc_2 = Process(target=servo.P1, args=(aliveP,))
 proc_sound = Process(target=sound.play, args=(aliveP, imageQ, mylock))
+
 
 # proc.start()
 # proc_2.start()
@@ -49,9 +56,9 @@ time.sleep(.1)
 
 # ------ main program start ------
 if __name__ == '__main__':
-    frontface_path = "/usr/local/Cellar/opencv3/HEAD-fb456eb_4/share/OpenCV/haarcascades/haarcascade_frontalface_alt2.xml"
-    profileface_path = "/usr/local/Cellar/opencv3/HEAD-fb456eb_4/share/OpenCV/haarcascades/haarcascade_profileface.xml"
-    upperbody_path = "/usr/local/Cellar/opencv3/HEAD-fb456eb_4/share/OpenCV/haarcascades/haarcascade_upperbody.xml"
+    frontface_path = "../opencv/data/haarcascades//haarcascade_frontalface_alt2.xml"
+    profileface_path = "../opencv/data/haarcascades/haarcascade_profileface.xml"
+    upperbody_path = "../opencv/data/haarcascades/haarcascade_upperbody.xml"
 
     frontface = cv2.CascadeClassifier(frontface_path)
     profileface = cv2.CascadeClassifier(profileface_path)

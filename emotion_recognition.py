@@ -9,9 +9,9 @@ import cv2
 from sklearn.externals import joblib
 
 def emotion_recognition(image):
-  
+    image = cv2.resize(image,(350,350))
     #model=joblib.load('svc_1.pkl')
-    fishface=cv2.createFisherFaceRecognizer()
+    fishface=cv2.face.createFisherFaceRecognizer()
     try:
         fishface.load("trained_emoclassifier.xml")
     except:
