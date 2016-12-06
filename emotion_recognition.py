@@ -7,19 +7,20 @@ Created on Tue Nov 08 21:21:55 2016
 import cv2
 #import prepare_dataset
 from sklearn.externals import joblib
+import getLandmark as land
+model = joblib.load('svc_1.pkl')
+
 
 def emotion_recognition(image):
-    image = cv2.resize(image,(350,350))
-    #model=joblib.load('svc_1.pkl')
-    fishface=cv2.face.createFisherFaceRecognizer()
-    try:
-        fishface.load("trained_emoclassifier.xml")
-    except:
-        print("no xlm file for fisher model")
-    pred,conf=fishface.predict(image)
-    print("your emotion is",pred)
-    #return prediction.prediction(image,model)
-    return pred
+    features = land.get_landmarks(image)
+    if features!='error':
+    	pred = model.predict(features)
+    	print("your emotion is",pred)
+    	#return prediction.prediction(image,model)
+    	return pred
+    else:
+	print('dont find')
+	return 0
         
     
 #==============================================================================
