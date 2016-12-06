@@ -39,7 +39,8 @@ def play(proc, imageQ, mylock):
                     print('empy')
                 mylock.release()
                 print('empty? ' + str(imageQ.empty()))
-                score = emotion_recognition(gray)
+                #score = emotion_recognition(gray)
+		score = 0
                 print("Feedback for song " + str(recommend_song) + ": " + str(score))
                 recommender.song_feedback(recommend_song, score=score)
         print("Song is over or user wants the next song.")
