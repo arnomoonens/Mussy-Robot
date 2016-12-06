@@ -3,6 +3,7 @@ import cv2
 from multiprocessing import Process, Queue, Lock
 import time
 import sys
+from speech_to_text import get_voice_feedback
 import myservo as servo
 import mysound as sound
 
@@ -36,6 +37,10 @@ def detect(img, cascade):
 def draw_rects(img, rects, color):
     for x1, y1, x2, y2 in rects:
         cv2.rectangle(img, (x1, y1), (x2, y2), color, 2)
+
+print("Listening for start command")
+get_voice_feedback(["start robot"],timeout=20) #timout seconds
+print('Hi, I am here.')
 
 #---- initialization----- 
 proc = Process(target=servo.P0, args=(aliveP,))
@@ -98,7 +103,8 @@ if __name__ == '__main__':
 		if imageQ.empty():
 			mylock.acquire()
 			print 'put'
-                	imageQ.put(gray[y:z,x:w])
+                    	#imageQ.put(gray[y:z, x:w])
+		    	imageQ.put(gray)
 			mylock.release()
 
         #if face is found the camera follow it 

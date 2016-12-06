@@ -19,7 +19,7 @@ def emotion_recognition(image):
     	#return prediction.prediction(image,model)
     	return pred
     else:
-	print('dont find')
+	print('Features didnt find')
 	return 0
         
     

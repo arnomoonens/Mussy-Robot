@@ -39,7 +39,7 @@ def draw_rects(img, rects, color):
         cv2.rectangle(img, (x1, y1), (x2, y2), color, 2)
 
 print("Listening for start command")
-#get_voice_feedback(["start robot"],timeout=20) #timout seconds
+get_voice_feedback(["start robot"],timeout=20) #timout seconds
 print('Hi, I am here.')
 
 
