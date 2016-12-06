@@ -38,9 +38,9 @@ def draw_rects(img, rects, color):
     for x1, y1, x2, y2 in rects:
         cv2.rectangle(img, (x1, y1), (x2, y2), color, 2)
 
-
+print("Listening for start command")
 get_voice_feedback(["start robot"],timeout=20) #timout seconds
-print('hi, i am here.')
+print('Hi, I am here.')
 
 
 # ---- initialization-----
@@ -56,9 +56,9 @@ time.sleep(.1)
 
 # ------ main program start ------
 if __name__ == '__main__':
-    frontface_path = "../opencv/data/haarcascades//haarcascade_frontalface_alt2.xml"
-    profileface_path = "../opencv/data/haarcascades/haarcascade_profileface.xml"
-    upperbody_path = "../opencv/data/haarcascades/haarcascade_upperbody.xml"
+    frontface_path = "../opencv-3.0.0/data/haarcascades//haarcascade_frontalface_alt2.xml"
+    profileface_path = "../opencv-3.0.0/data/haarcascades/haarcascade_profileface.xml"
+    upperbody_path = "../opencv-3.0.0/data/haarcascades/haarcascade_upperbody.xml"
 
     frontface = cv2.CascadeClassifier(frontface_path)
     profileface = cv2.CascadeClassifier(profileface_path)

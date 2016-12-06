@@ -11,7 +11,8 @@ LM = "./pocketsphinx/0495.lm"
 DIC = "./pocketsphinx/0495.dic"
 pocketsphinx_commands = [
     'pocketsphinx_continuous',
-    '-hmm', '/usr/share/pocketsphinx/model/en-us/en-us',
+    '-adcdev', 'plughw:1',
+    '-hmm', '/usr/local/share/pocketsphinx/model/en-us/en-us',
     '-samprate', '16000/8000/48000',
     '-inmic', 'yes',
     '-lm', LM,
@@ -61,6 +62,7 @@ def get_voice_feedback(words, timeout=float("inf")):
         elif counter > 0:
             counter -= 1
             continue
+	print(psphinx_output)
         for word in words:
             if word in psphinx_output:
                 psphinx_process.kill()
