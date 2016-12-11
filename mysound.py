@@ -5,7 +5,7 @@ from recommender import MusicRecommender
 # from text_to_speech import speak
 # from speech_to_text import get_voice_feedback
 from google_play_music import get_song, play_song
-from emotion_recognition import emotion_recognition
+#from emotion_recognition import emotion_recognition
 import time
 
 recommender = MusicRecommender('songs.csv')
@@ -39,8 +39,8 @@ def play(proc, imageQ, mylock):
                     print('empy')
                 mylock.release()
                 print('empty? ' + str(imageQ.empty()))
-                score = emotion_recognition(gray)
-		#score = 0
+                #score = emotion_recognition(gray)
+		score = 0
                 print("Feedback for song " + str(recommend_song) + ": " + str(score))
                 recommender.song_feedback(recommend_song, score=score)
         print("Song is over or user wants the next song.")
