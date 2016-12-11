@@ -11,7 +11,6 @@ LM = "./pocketsphinx/0495.lm"
 DIC = "./pocketsphinx/0495.dic"
 pocketsphinx_commands = [
     'pocketsphinx_continuous',
-    '-adcdev', 'plughw:1',
     '-hmm', '/usr/local/share/pocketsphinx/model/en-us/en-us',
     '-samprate', '16000/8000/48000',
     '-inmic', 'yes',
