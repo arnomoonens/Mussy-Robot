@@ -62,7 +62,6 @@ def emotion_recognition(image):
     return prediction_mouth(image)
     #return prediction_Fisher(image)
 
-
     
     
     
