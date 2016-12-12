@@ -39,9 +39,9 @@ def draw_rects(img, rects, color):
     for x1, y1, x2, y2 in rects:
         cv2.rectangle(img, (x1, y1), (x2, y2), color, 2)
 
-speak("Hello! Say 'hello mussy' to start.")
+print("Say 'hello mussy' to activate.")
 get_voice_feedback(["hello mussy"], timeout=30)  # timout seconds
-print('Hi, I am here.')
+speak("Hello!")
 
 # ---- initialization-----
 proc = Process(target=servo.P0, args=(aliveP,))

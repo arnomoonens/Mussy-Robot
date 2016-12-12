@@ -9,7 +9,7 @@ import cv2
 #import prepare_dataset
 from sklearn.externals import joblib
 import mouth_recognition
-import getLandmark as land
+#import getLandmark as land
 
 
 # ----------------------- PREDICTION ----------------------
@@ -44,17 +44,17 @@ def prediction_mouth(im):
         return 0
 
 
-def prediction_land(image):
-    #use land
-    model = joblib.load('trainingLandmark/svc_1.pkl')
-    features = land.get_landmarks(image)
-    if features!='error':
-        value_predict=model.predict(features)
-        print("your emotion is",value_predict)
-        return value_predict
-    else:
-        print('no features')
-        return 0 
+##def prediction_land(image):
+##    #use land
+##    model = joblib.load('trainingLandmark/svc_1.pkl')
+##    features = land.get_landmarks(image)
+##    if features!='error':
+##        value_predict=model.predict(features)
+##        print("your emotion is",value_predict)
+##        return value_predict
+##    else:
+##        print('no features')
+##        return 0 
 # ----------------- EMOTION RECOGNITION ---------------------------
 
 def emotion_recognition(image):

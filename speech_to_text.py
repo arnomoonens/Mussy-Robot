@@ -62,6 +62,7 @@ def get_voice_feedback(words, timeout=float("inf")):
         elif counter > 0:
             counter -= 1
             continue
+	print(psphinx_output)
         for word in words:
             if word in psphinx_output:
                 psphinx_process.kill()
