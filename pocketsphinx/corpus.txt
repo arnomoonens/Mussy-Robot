@@ -1,4 +1,6 @@
-start mussy
+start ussy
+hello mussy
+hello robot
 start robot
 computer
 good

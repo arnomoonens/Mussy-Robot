@@ -62,7 +62,6 @@ def get_voice_feedback(words, timeout=float("inf")):
         elif counter > 0:
             counter -= 1
             continue
-	print(psphinx_output)
         for word in words:
             if word in psphinx_output:
                 psphinx_process.kill()
@@ -73,7 +72,8 @@ def get_voice_feedback(words, timeout=float("inf")):
 
 if __name__ == '__main__':
     try:
-        get_voice_feedback(["start robot"], timeout=30)
+        speak("Hello, I am Mussy.")
+        get_voice_feedback(["hello mussy"], timeout=30)
         print("It worked")
     except KeyboardInterrupt:
         pass
