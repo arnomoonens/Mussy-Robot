@@ -39,7 +39,7 @@ def draw_rects(img, rects, color):
         cv2.rectangle(img, (x1, y1), (x2, y2), color, 2)
 
 print("Listening for start command")
-get_voice_feedback(["start robot"],timeout=20) #timout seconds
+#get_voice_feedback(["start robot"],timeout=20) #timout seconds
 print('Hi, I am here.')
 
 
@@ -103,8 +103,8 @@ if __name__ == '__main__':
                 if imageQ.empty():
                     mylock.acquire()
                     print('put')
-                    #imageQ.put(gray[y:z, x:w])
-		    imageQ.put(gray)
+                    imageQ.put(gray[y:z, x:w])
+		    #imageQ.put(gray)
                     mylock.release()
         # if face is found the camera follow it
             # if Cface[0] != 0:
