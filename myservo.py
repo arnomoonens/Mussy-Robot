@@ -5,8 +5,8 @@ from multiprocessing import Process, Queue, Lock
 
 #----------------------- SERVO 1 ----------------------------
 speed = .1
-minP = 20
-maxP = 160
+minP = 30
+maxP = 180
 currentP = 90
 newP = 90
 q = Queue() #queue for the new position
@@ -71,8 +71,8 @@ def P0(proc):
 
 # ----------------------------- SERVO 2 ------------------
 speed = .1
-minP_2 = 40
-maxP_2 = 120
+minP_2 = 80
+maxP_2 = 100
 currentP_2 = 90
 newP_2 = 90
 q_2 = Queue() #queue for the new position
