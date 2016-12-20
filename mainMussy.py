@@ -104,8 +104,8 @@ if __name__ == '__main__':
 		if imageQ.empty():
 			mylock.acquire()
 			print 'put'
-                    	#imageQ.put(gray[y:z, x:w])
-		    	imageQ.put(gray)
+                    	imageQ.put(gray[y:z, x:w])
+		    	#imageQ.put(gray)
 			mylock.release()
 
         #if face is found the camera follow it

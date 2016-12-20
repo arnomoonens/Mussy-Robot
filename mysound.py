@@ -29,7 +29,7 @@ def play(proc, imageQ, mylock):
         play_process = play_song(song_gplay['nid'])
         time.sleep(5)
         score = 0
-        while(score >= 0 and not(proc.empty()) and play_process.poll() != 0):  # While the song isn't done playing yet or no 'next' key is pressed
+        while(score >= 0 and not proc.empty() and play_process.poll() != 0):  # While the song isn't done playing yet or no 'next' key is pressed
             if not imageQ.empty():  # If there are images to be used for emotion recognition
                 mylock.acquire()
                 gray = imageQ.get()
